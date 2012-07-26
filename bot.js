@@ -32,8 +32,8 @@ module.exports = function( logs ) {
 		}
 
 		client.addListener('message', function (from, to, message) {
+			if( env.NODE_ENV == 'development' ) console.log( 'message from ' + from + ' on ' + to + ': ' + message );
 			if( logs[ to ] instanceof Array ) {
-				if( env.NODE_ENV == 'development' ) console.log( 'message from ' + from + ' on ' + to );
 				logs[ to ].push({ from: from, message: message, stamp: (new Date).getTime() });
 				if( logs[ to ].length > 1000 ) logs[ to ] = logs[ to ].slice( -1000 );
 			}
