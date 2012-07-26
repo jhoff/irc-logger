@@ -25,6 +25,7 @@ module.exports = function( logs ) {
 			logs[ channels[c] ] = [];
 			client.addListener('message' + channels[c], function (from, message) {
 				logs[ channels[c] ].push({ from: from, message: message, stamp: (new Date).getTime() });
+				if( logs[ channels[c] ].length > 1000 ) logs[ channels[c] ] = logs[ channels[c] ].slice( -1000 );
 			});
 		}
 
