@@ -11,7 +11,7 @@ module.exports = function( logs ) {
 	// start the irc bot, and for each message on each channel, append to the logs
 	if( env.IRC_SERVER && env.IRC_BOT_NICK && env.IRC_CHANNELS ) {
 		var irc = require('irc'),
-			channels = env.IRC_CHANNELS.split(',');
+			channels = env.IRC_CHANNELS.toLowerCase().split(',');
 
 		console.log( 'connecting to IRC!' );
 
@@ -32,6 +32,7 @@ module.exports = function( logs ) {
 		}
 
 		client.addListener('message', function (from, to, message) {
+			to = to.toLowerCase();
 			if( env.NODE_ENV == 'development' ) console.log( 'message from ' + from + ' on ' + to + ': ' + message );
 			if( logs[ to ] instanceof Array ) {
 				logs[ to ].push({ from: from, message: message, stamp: (new Date).getTime() });
