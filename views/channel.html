@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+	<title>{{irc_server}} #{{channel}} logs</title>
+	<style type="text/css" media="screen">
+		.time {
+			float: right;
+		}
+		ul {
+			list-style: none;
+		}
+	</style>
+</head>
+<body id="body">
+	Logs for {{channel}} on {{irc_server}}:
+	<ul>
+	{{#logs}}
+		<li>@{{from}}: {{message}}<span class="time" data-unix="{{stamp}}">-</span></li>
+	{{/logs}}
+	</ul>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript" charset="utf-8">
+
+	function update_time() {
+		$('.time[data-unix]').each(function() {
+			$(this).html( time_ago( $(this).attr('data-unix') / 1000 ) );
+		});
+	}
+
+	setInterval( update_time , 1000 );
+
+	update_time();
+
+	function time_ago( time ) {
+		var periods = [ "second", "minute", "hour", "day", "week", "month", "year", "decade" ],
+			lengths = [ 60, 60, 24, 7, 4.35, 12, 10 ],
+			difference = Math.floor( (new Date).getTime() / 1000 ) - Math.floor( time );
+
+		for(var j = 0; difference >= lengths[j] && j < lengths.length-1; j++) {
+			difference /= lengths[j];
+		}
+
+		difference = Math.round(difference);
+		if(difference != 1) { periods[j] += "s"; }
+		return difference + " " + periods[j] + " ago";
+	};
+
+	</script>
+</body>
+</html>

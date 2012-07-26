@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-type" content="text/html; charset=utf-8">
+	<title>{{irc_server}} logs</title>
+</head>
+<body id="body">
+	Channels on {{irc_server}}:
+	<ul>
+	{{#channels}}
+		<a href="/{{href}}">{{name}}</a>
+	{{/channels}}
+	</ul>
+</body>
+</html>
