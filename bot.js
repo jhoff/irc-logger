@@ -1,29 +1,36 @@
 module.exports = function( logs ) {
 	var env = process.env;
 
-	console.log( 'server: ' + process.env.IRC_SERVER );
-	console.log( 'nick: ' + process.env.IRC_BOT_NICK );
-	console.log( 'channels: ' + process.env.IRC_CHANNELS );
+	console.log( 'server: ' + env.IRC_SERVER );
+	console.log( 'nick: ' + env.IRC_BOT_NICK );
+	console.log( 'channels: ' + env.IRC_CHANNELS );
+	console.log( 'username: ' + env.IRC_BOT_USERNAME );
+	console.log( 'realname: ' + env.IRC_BOT_REALNAME );
+	console.log( 'password: ' + env.IRC_BOT_PASSWORD );
 
 	// start the irc bot, and for each message on each channel, append to the logs
-	if( process.env.IRC_SERVER && process.env.IRC_BOT_NICK && process.env.IRC_CHANNELS ) {
+	if( env.IRC_SERVER && env.IRC_BOT_NICK && env.IRC_CHANNELS ) {
 		var irc = require('irc'),
-			channels = process.env.IRC_CHANNELS.split(',');
+			channels = env.IRC_CHANNELS.split(',');
 
 		console.log( 'connecting to IRC!' );
 
 		var client = new irc.Client(
-			process.env.IRC_SERVER,
-			process.env.IRC_BOT_NICK,
+			env.IRC_SERVER,
+			env.IRC_BOT_NICK,
 			{
-				password: process.env.IRC_BOT_PASSWORD || null,
+				userName: env.IRC_BOT_USERNAME || 'nodelogger',
+				userName: env.IRC_BOT_REALNAME || 'nodeJS IRC logger',
+				password: env.IRC_BOT_PASSWORD || null,
 				channels: channels,
+				stripColors: true
 			}
 		);
 
 		for( var c in channels ) {
 			logs[ channels[c] ] = [];
 			client.addListener('message' + channels[c], function (from, message) {
+				if( env.NODE_ENV == 'development' ) console.log( 'message from ' + from + ' on ' + channels[c] );
 				logs[ channels[c] ].push({ from: from, message: message, stamp: (new Date).getTime() });
 				if( logs[ channels[c] ].length > 1000 ) logs[ channels[c] ] = logs[ channels[c] ].slice( -1000 );
 			});
